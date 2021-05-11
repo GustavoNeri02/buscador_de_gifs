@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:buscador_de_gifs/ui/gif_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -132,7 +133,13 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
           onTap: index < snapshot.data["data"].length
-              ? () {}
+              ? () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              GifPage(gifData: snapshot.data["data"][index])));
+                }
               : () {
                   setState(() {
                     _offSet += 24;
