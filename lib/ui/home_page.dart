@@ -4,6 +4,7 @@ import 'package:buscador_de_gifs/ui/gif_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:share/share.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -18,9 +19,9 @@ class _HomePageState extends State<HomePage> {
 
   Future<Map> _getGifs() async {
     http.Response response;
-    if (_search == null) {
+    if (_search == null || _search.isEmpty) {
       response = await http.get(
-          "https://api.giphy.com/v1/gifs/trending?api_key=29hEJBnuzGk81hdIyB1J4Uc6qQ3DB8Gb&limit=20&rating=g");
+          "https://api.giphy.com/v1/gifs/trending?api_key=29hEJBnuzGk81hdIyB1J4Uc6qQ3DB8Gb&limit=25&offset=$_offSet&rating=g");
     } else {
       response = await http.get(
           "https://api.giphy.com/v1/gifs/search?api_key=29hEJBnuzGk81hdIyB1J4Uc6qQ3DB8Gb&q=$_search&limit=25&offset=$_offSet&rating=g&lang=en");
@@ -110,8 +111,10 @@ class _HomePageState extends State<HomePage> {
       itemBuilder: (context, index) {
         return GestureDetector(
           child: index < snapshot.data["data"].length
-              ? Image.network(
-                  snapshot.data["data"][index]["images"]["fixed_height"]["url"],
+              ? FadeInImage.memoryNetwork(
+                  placeholder: kTransparentImage,
+                  image: snapshot.data["data"][index]["images"]["fixed_height"]
+                      ["url"],
                   height: 300,
                   fit: BoxFit.cover,
                 )
